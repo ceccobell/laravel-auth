@@ -1,1 +1,26 @@
-@import '~bootstrap/scss/bootstrap'
+@import "~bootstrap/scss/bootstrap";
+
+#sidebar {
+    width: 150px;
+    height: 100vh;
+    background-color: rgb(39, 29, 28);
+}
+
+header {
+    height: 80px;
+    background-color: rgb(39, 29, 28);
+}
+
+.nav-link {
+    color: white;
+}
+
+#content {
+    width: calc(100vw - 150px);
+    height: 100vh;
+}
+
+main {
+    height: calc(100% - 80px);
+    padding: 20px 10px;
+}
