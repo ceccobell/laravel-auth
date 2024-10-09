@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Project;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateProjectRequest;
+use App\Http\Requests\StoreProjectRequest;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -35,19 +39,27 @@ class ProjectController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreProjectRequest $request)
     {
-        $form_data = $request->all();
+        // Tutti i dati validati sono ora accessibili tramite $request->validated()
+        $form_data = $request->validated();
 
-        $projet = new Project();
+        // Aggiungi lo slug generato
+        $form_data['slug'] = Project::generateSlug($form_data['name']);
 
-        $form_data['slug'] = Project::generateSlug($form_data['name'], '-');
+        // Gestisci il caricamento dell'immagine, se presente
+        if ($request->hasFile('project_image')) {
+            $path = Storage::disk('public')->put('project_image', $form_data['project_image']);
+            $form_data['project_image'] = $path;
+        }
+        else {
+            $form_data['project_image'] = 'https://placehold.co/600x400?text=MISSING+IMG';
+        }
 
-        $projet->fill($form_data);
+        // Crea il progetto
+        $project = Project::create($form_data);
 
-        $projet->save();
-
-        return redirect()->route('admin.projects.index');
+        return redirect()->route('admin.projects.index')->with('success', 'Progetto creato con successo.');
     }
 
     /**
