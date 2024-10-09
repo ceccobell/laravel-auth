@@ -20,7 +20,7 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::all();
-        return view ('admin.projects.index', compact('projects'));
+        return view('admin.projects.index', compact('projects'));
     }
 
     /**
@@ -91,24 +91,29 @@ class ProjectController extends Controller
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Project $project)
-    {
-        // Validazione dei campi
-        $request->validate([
-            'name' => 'required|max:100',
-            'slug' => 'required|unique:projects,slug,' . $project->id,
-            'summary' => 'nullable'
-        ]);
+    public function update(UpdateProjectRequest $request, Project $project)
+{
 
-        // Aggiorna il progetto esistente
-        $project->name = $request->name; 
-        $project->summary = $request->summary;
-        
-        $project->save();
+    $form_data = $request->validated();
 
-        // Redirect alla pagina index con messaggio di successo
-        return redirect()->route('admin.projects.index')->with('success', 'Progetto aggiornato con successo.');
+
+    if ($request->hasFile('project_image')) {
+
+        if (Str::startsWith($project->project_image, 'https') === false) {
+            Storage::disk('public')->delete($project->project_image);
+        }
+
+
+        $path = Storage::disk('public')->put('project_image', $form_data['project_image']);
+        $form_data['project_image'] = $path;
     }
+
+    $form_data['slug'] = Project::generateSlug($form_data['name']);
+
+    $project->update($form_data);
+
+    return redirect()->route('admin.projects.index');
+}
 
     /**
      * Remove the specified resource from storage.
@@ -118,8 +123,18 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+
+       if($project->project_image !== null){
+            Storage::delete($project->project_image);
+       }
+
         $project->delete();
 
         return redirect()->route('admin.projects.index');
+    }
+    
+    public function __construct()
+    {
+        $this->middleware('auth'); 
     }
 }
