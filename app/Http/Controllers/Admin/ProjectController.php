@@ -64,24 +64,38 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Project $project)
     {
-        //
+        return view('admin.projects.edit', compact('project'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Project $project)
     {
-        //
+        // Validazione dei campi
+        $request->validate([
+            'name' => 'required|max:100',
+            'slug' => 'required|unique:projects,slug,' . $project->id,
+            'summary' => 'nullable'
+        ]);
+
+        // Aggiorna il progetto esistente
+        $project->name = $request->name; 
+        $project->summary = $request->summary;
+        
+        $project->save();
+
+        // Redirect alla pagina index con messaggio di successo
+        return redirect()->route('admin.projects.index')->with('success', 'Progetto aggiornato con successo.');
     }
 
     /**
