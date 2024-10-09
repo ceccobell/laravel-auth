@@ -6,7 +6,7 @@
             <div class="col-12">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2>Progetti</h2>
-                    <a href="" class="btn btn-sm btn-primary">Aggiungi Progetto</a>
+                    <a href="{{ route('admin.projects.create') }}" class="btn btn-sm btn-primary">Aggiungi Progetto</a>
                 </div>
             </div>
             <div class="col-12">
@@ -27,16 +27,16 @@
                                 <td>{{ $project->slug }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
-                                        <a href="{{ route('admin.projects.show', ['project' => $project->id]) }}" class="btn btn-sm btn-info" title="Vedi Dettagli">
+                                        <a href="{{ route('admin.projects.show', ['project' => $project->id]) }}" class="btn btn-sm btn-info me-1 rounded" title="Vedi Dettagli">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <a href="" class="btn btn-sm btn-warning" title="Modifica">
+                                        <a href="{{ route('admin.projects.edit', ['project' => $project->id]) }}" class="btn btn-sm btn-warning me-1 rounded" title="Modifica">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
                                         <form action="" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" title="Elimina">
+                                            <button type="submit" class="btn btn-sm rounded btn-danger" title="Elimina">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
