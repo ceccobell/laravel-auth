@@ -33,7 +33,7 @@
                                         <a href="{{ route('admin.projects.edit', ['project' => $project->id]) }}" class="btn btn-sm btn-warning me-1 rounded" title="Modifica">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        <form action="" method="POST" class="d-inline">
+                                        <form action="{{ route('admin.projects.destroy', $project->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm rounded btn-danger" title="Elimina">
