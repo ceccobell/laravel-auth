@@ -26,17 +26,18 @@
                                 <td>{{ $project->name }}</td>
                                 <td>{{ $project->slug }}</td>
                                 <td class="text-center">
-                                    <div class="btn-group">
-                                        <a href="{{ route('admin.projects.show', ['project' => $project->id]) }}" class="btn btn-sm btn-info me-1 rounded" title="Vedi Dettagli">
+                                    <div class="d-flex justify-content-between">
+                                        <a href="{{ route('admin.projects.show', ['project' => $project->id]) }}"
+                                            class="btn btn-sm me-1 btn-info" title="Vedi Dettagli">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <a href="{{ route('admin.projects.edit', ['project' => $project->id]) }}" class="btn btn-sm btn-warning me-1 rounded" title="Modifica">
+                                        <a href="{{ route('admin.projects.edit', ['project' => $project->id]) }}"
+                                            class="btn btn-sm me-1 btn-warning" title="Modifica">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        <form action="{{ route('admin.projects.destroy', $project->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm rounded btn-danger" title="Elimina">
+                                        <form class="d-inline">
+                                            <button type="button" class="btn btn-sm btn-danger delete-project"
+                                                data-project-id="{{ $project->id }}">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
@@ -49,4 +50,5 @@
             </div>
         </div>
     </div>
+    @include('admin.projects.modal_delete')
 @endsection
